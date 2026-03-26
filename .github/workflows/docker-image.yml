@@ -20,11 +20,11 @@ jobs:
         id: creds
         shell: bash
         run: |
-          USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-          TOKEN="${{ secrets.DOCKERHUB_TOKEN }}"
+          USERNAME="${{ secrets.DOCKER_USERNAME }}"
+          TOKEN="${{ secrets.DOCKER_PASSWORD }}"
 
-          if [ -z "$USERNAME" ]; then USERNAME="${{ secrets.DOCKER_USERNAME }}"; fi
-          if [ -z "$TOKEN" ]; then TOKEN="${{ secrets.DOCKER_PASSWORD }}"; fi
+          if [ -z "$USERNAME" ]; then USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"; fi
+          if [ -z "$TOKEN" ]; then TOKEN="${{ secrets.DOCKERHUB_TOKEN }}"; fi
 
           if [ -z "$USERNAME" ] || [ -z "$TOKEN" ]; then
             echo "Missing Docker Hub credentials."
