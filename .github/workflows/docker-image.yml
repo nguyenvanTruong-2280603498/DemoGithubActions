@@ -23,12 +23,15 @@ jobs:
           USERNAME="${{ secrets.DOCKER_USERNAME }}"
           TOKEN="${{ secrets.DOCKER_PASSWORD }}"
 
-          if [ -z "$USERNAME" ]; then USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"; fi
-          if [ -z "$TOKEN" ]; then TOKEN="${{ secrets.DOCKERHUB_TOKEN }}"; fi
+          # Remove accidental CR/LF from copied secret values.
+          USERNAME="${USERNAME//$'\r'/}"
+          USERNAME="${USERNAME//$'\n'/}"
+          TOKEN="${TOKEN//$'\r'/}"
+          TOKEN="${TOKEN//$'\n'/}"
 
           if [ -z "$USERNAME" ] || [ -z "$TOKEN" ]; then
             echo "Missing Docker Hub credentials."
-            echo "Use DOCKERHUB_USERNAME + DOCKERHUB_TOKEN (recommended), or DOCKER_USERNAME + DOCKER_PASSWORD."
+            echo "Use DOCKER_USERNAME + DOCKER_PASSWORD."
             exit 1
           fi
 
