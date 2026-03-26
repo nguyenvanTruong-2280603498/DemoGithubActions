@@ -20,8 +20,20 @@ jobs:
         id: creds
         shell: bash
         run: |
-          USERNAME="${{ secrets.DOCKER_USERNAME }}"
-          TOKEN="${{ secrets.DOCKER_PASSWORD }}"
+          U1="${{ secrets.DOCKER_USERNAME }}"
+          P1="${{ secrets.DOCKER_PASSWORD }}"
+          U2="${{ secrets.DOCKERHUB_USERNAME }}"
+          P2="${{ secrets.DOCKERHUB_TOKEN }}"
+
+          echo "DOCKER_USERNAME set: $([ -n "$U1" ] && echo yes || echo no)"
+          echo "DOCKER_PASSWORD set: $([ -n "$P1" ] && echo yes || echo no)"
+          echo "DOCKERHUB_USERNAME set: $([ -n "$U2" ] && echo yes || echo no)"
+          echo "DOCKERHUB_TOKEN set: $([ -n "$P2" ] && echo yes || echo no)"
+
+          USERNAME="$U1"
+          TOKEN="$P1"
+          if [ -z "$USERNAME" ]; then USERNAME="$U2"; fi
+          if [ -z "$TOKEN" ]; then TOKEN="$P2"; fi
 
           # Remove accidental CR/LF from copied secret values.
           USERNAME="${USERNAME//$'\r'/}"
@@ -30,8 +42,9 @@ jobs:
           TOKEN="${TOKEN//$'\n'/}"
 
           if [ -z "$USERNAME" ] || [ -z "$TOKEN" ]; then
-            echo "Missing Docker Hub credentials."
-            echo "Use DOCKER_USERNAME + DOCKER_PASSWORD."
+            echo "Missing Docker Hub credentials. Set either:"
+            echo "- DOCKER_USERNAME + DOCKER_PASSWORD"
+            echo "- or DOCKERHUB_USERNAME + DOCKERHUB_TOKEN"
             exit 1
           fi
 
